@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="so">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>C.S Company – Admin Panel</title>
+  <style>
+    body {font-family: Arial, sans-serif; background:#f5f8fd; margin:0; color:#111;}
+    header {background:#0b6fb5; color:white; padding:12px 20px; font-size:20px;}
+    table {width:100%; border-collapse:collapse; margin-top:20px;}
+    th,td {border:1px solid #dbe6f7; padding:8px; text-align:left;}
+    th {background:#e8f0fa;}
+    button {background:#0b6fb5; color:white; border:none; padding:6px 10px; border-radius:4px; cursor:pointer;}
+    .paid {background:#10b981;}
+    footer {text-align:center; padding:10px; color:#666;}
+  </style>
+</head>
+<body>
+  <header>C.S Company – Admin Panel</header>
+  <main style="padding:20px;">
+    <h3>Dalabyada Macaamiisha</h3>
+    <table id="orderTable">
+      <thead>
+        <tr><th>#</th><th>Magac</th><th>Phone</th><th>System</th><th>Amount</th><th>PIN</th><th>Status</th><th>Action</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </main>
+  <footer>© C.S Company • Admin View</footer>
+
+  <script>
+    function loadOrders(){
+      const tb=document.querySelector('#orderTable tbody');
+      tb.innerHTML='';
+      const orders=JSON.parse(localStorage.getItem('cs_orders')||'[]');
+      if(orders.length===0){tb.innerHTML='<tr><td colspan="8">Ma jiraan dalabyo.</td></tr>';return;}
+      orders.forEach((o,i)=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td>${i+1}</td><td>${o.name}</td><td>${o.phone}</td><td>${o.product}</td>
+                      <td>$${o.amount}</td><td>${o.pin}</td><td>${o.status}</td>
+                      <td><button onclick="markPaid(${o.id})">Mark Paid</button></td>`;
+        tb.appendChild(tr);
+      });
+    }
+    function markPaid(id){
+      let orders=JSON.parse(localStorage.getItem('cs_orders')||'[]');
+      orders=orders.map(o=>{if(o.id===id){o.status='PAID';}return o;});
+      localStorage.setItem('cs_orders',JSON.stringify(orders));
+      loadOrders();
+    }
+    const pwd=prompt('Geli password admin:');
+    if(pwd==='csadmin2025'){loadOrders();}else{document.body.innerHTML='<h2 style="text-align:center;margin-top:50px;">❌ Password khaldan.</h2>';}
+  </script>
+</body>
+</html>
